@@ -5,14 +5,13 @@ from tkinter import filedialog
 
 def encrypt_file(filename, key):
     with open(filename, "rb") as file:
-        print(file.read())
         data = file.read()
-    
+
     key_bytes = key.encode()
     encrypted_data = bytearray()
     for i in range(len(data)):
         encrypted_data.append(data[i] ^ key_bytes[i % len(key_bytes)])
-        
+
     encrypted_filename = os.path.splitext(filename)[0] + ".enc"
     with open(encrypted_filename, "wb") as file:
         file.write(encrypted_data)
@@ -20,13 +19,13 @@ def encrypt_file(filename, key):
 def decrypt_file(filename, key):
     with open(filename, "rb") as file:
         encrypted_data = file.read()
-    
+
     key_bytes = key.encode()
     decrypted_data = bytearray()
     for i in range(len(encrypted_data)):
         decrypted_data.append(encrypted_data[i] ^ key_bytes[i % len(key_bytes)])
-        
-    decrypted_filename = os.path.splitext(filename)[0] + ".dec"
+
+    decrypted_filename, _ = os.path.splitext(filename)
     with open(decrypted_filename, "wb") as file:
         file.write(decrypted_data)
 
