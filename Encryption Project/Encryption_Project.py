@@ -5,6 +5,7 @@ from tkinter import filedialog
 
 def encrypt_file(filename, key):
     with open(filename, "rb") as file:
+        print(file.read())
         data = file.read()
     
     key_bytes = key.encode()
