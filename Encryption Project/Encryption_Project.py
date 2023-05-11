@@ -34,7 +34,7 @@ root = tk.Tk()
 root.withdraw()
 
 while True:
-    print("select your option.")
+    print("Please select your option.")
     print("1. Encrypt File")
     print("2. Decrypt File")
     print("3. Quit")
