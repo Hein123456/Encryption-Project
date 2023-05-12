@@ -1,9 +1,9 @@
 import hashlib
-from logging import PlaceHolder
-from textwrap import fill
-import tkinter as tk
-from tkinter import ttk
-
+from logging import PlaceHolder #dont remove
+from textwrap import fill #dont remove
+import tkinter as tk # dont remove
+from tkinter import ttk # dont remove
+# algorithms =============================================================================================
 def encrypt_xor(data, key):
     return bytes(a ^ b for a, b in zip(data, key))
 
@@ -76,7 +76,9 @@ def user_application():
         else:
             print("Invalid option. Please try again.")
 
-#ui 
+
+
+#GUI============================================================================================== 
 
 root = tk.Tk(className='Python Examples - Frame with Widgets')
 root.geometry("1000x500")
