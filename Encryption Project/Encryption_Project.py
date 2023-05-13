@@ -9,7 +9,7 @@ file_flag = False
 file_path = ''
 
 #AES encrypt & decrypt #Skyf
-
+key = "Hello there"
 
 
 
