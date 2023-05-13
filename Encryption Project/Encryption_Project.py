@@ -143,9 +143,6 @@ def decode_rot47(keyword):
     return result
 
 
-# locked file 1 pass 2 file #Jaap
-
-
 
 #source file delete #Skyf
 
