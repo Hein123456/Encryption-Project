@@ -22,7 +22,7 @@ def AES_encrypt():
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
-    fsize = os.path.getsize(file_name)
+    fsize = os.path.getsize(file_path)
 
     with open(file_path, 'rb') as fin, open('output.bin', 'wb') as fout:
         while True:
@@ -105,6 +105,42 @@ def convert_file():
         output_file.write(block1)
         output_file.write(block2)
 # ROT47 pass Encrypt #Skyf
+def rot47_encode(keyword):
+    encoded_keyword = ""
+    for char in keyword:
+        ascii_code = ord(char)
+        if 33 <= ascii_code <= 126:
+            encoded_ascii_code = (ascii_code - 33 + 47) % 94 + 33
+            encoded_keyword += chr(encoded_ascii_code)
+        else:
+            encoded_keyword += char
+    return encoded_keyword
+
+
+def decode_rot47(keyword):
+   # """Decode a keyword using ROT47 encryption"""
+    # Initialize an empty result string
+    result = ""
+
+    # Loop through each character in the keyword
+    for c in keyword:
+        # Get the ASCII code of the character
+        ascii_code = ord(c)
+
+        # If the character is in the range of printable ASCII characters
+        if 33 <= ascii_code <= 126:
+            # Decode the character using the ROT47 algorithm
+            decoded_char = chr(33 + ((ascii_code + 14) % 94))
+        else:
+            # Otherwise, the character is not in the range of printable ASCII characters,
+            # so just append it as is to the result string
+            decoded_char = c
+        
+        # Append the decoded character to the result string
+        result += decoded_char
+    
+    # Return the decoded result
+    return result
 
 
 # locked file 1 pass 2 file #Jaap
