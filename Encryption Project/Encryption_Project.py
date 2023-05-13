@@ -24,10 +24,7 @@ def AES_encrypt():
 
     fsize = os.path.getsize(file_name)
 
-    with open('output.bin', 'wb') as fout:
-        fout.write(struct.pack('<Q', fsize))
-
-    with open(file_name, 'rb') as fin:
+    with open(file_name, 'rb') as fin, with open('output.bin', 'wb') as fout:
         while True:
             data = fin.read(size)
             n = len(data)
@@ -38,15 +35,16 @@ def AES_encrypt():
             encoded = aes.encrypt(data)
             fout.write(encoded)
 
-    
-#jou poes
+def AES_decrypt():
+    with open('filename.enc', rb) as fin:
+        fsize = struct.unpack('<Q', fin.read(struct.calcsize('<Q')))[0]
+        iv = fin.read(16)
 
 
-    
 
 
 
-#DES Encrypt & decrypt #Jaap
+
 
 
 
@@ -69,6 +67,7 @@ def DES_encrypt():
         # Encrypt the block and write it to the output file
             encrypted_block = cipher.encrypt(block)
             output_file.write(encrypted_block)
+
 def DES_decrypt():
 # Open the input and output files
    with open('decrypted_output.bin', 'wb') as output_file:
