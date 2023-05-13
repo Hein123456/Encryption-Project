@@ -16,9 +16,14 @@ file_name = ''
 key = ""
 iv = ""
 size = 2048
+
 #main
 def run_code():
     print("yes")
+    # start progress
+    set_progress(i) 
+    i = i+1
+
 #AES encrypt & decrypt #Skyf
 def AES_encrypt():
     key = "Working progress"
@@ -269,21 +274,26 @@ tk.Button(master=frame, text="Execute", bg='black', fg='#20C20E', **groove_style
 listbox2 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
 listbox2.grid(row=5, column=2 ,padx = 10,sticky="E")
 
-#row 6 
+#row6
 def update_progress(progress):
     progress_width = progress * frame.winfo_width() // 10
     progressbar.coords("progress", 0, 0, progress_width, 20)
-    if progress < 10:
-        root.after(100, update_progress, progress + 1)
-
-# add progress bar
+def set_progress(num):
+    if num < 1:
+        num = 1
+    elif num > 10:
+        num = 10
+    progress = (num - 1) / 9  # scale the number between 0 and 1
+    update_progress(progress)
 progressbar = tk.Canvas(frame,height=20, bg='#000000', highlightthickness=0, relief=tk.GROOVE, bd=1)
 progressbar.grid(row=6, column=0,columnspan=3 , sticky="W")
 
 progressbar.create_rectangle(0, 0, 0, 20, fill='#20C20E', width=0, tags="progress")
 
-# start progress
-update_progress(1)
+
+# Cal
+
+
 
 root.mainloop()
 
