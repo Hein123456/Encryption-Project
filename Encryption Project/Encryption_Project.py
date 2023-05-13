@@ -1,161 +1,103 @@
-import hashlib
-#from logging import PlaceHolder #dont remove
-#from textwrap import fill #dont remove
+
 import tkinter as tk # dont remove
-from tkinter import ttk # dont remove
-from tkinter import filedialog # dont remove
+from tkinter import Radiobutton, messagebox, filedialog, filedialog ,font,ttk# dont remove
+import os  # dont remove
 # algorithms =============================================================================================
-def encrypt_xor(data, key):
-    return bytes(a ^ b for a, b in zip(data, key))
-
-def encrypt_file_xor(filename, key):
-    with open(filename, "rb") as file:
-        data = file.read()
-    encrypted_data = encrypt_xor(data, key)
-    with open("CC-" + filename, "wb") as file:
-        file.write(encrypted_data)
-
-def decrypt_xor(data, key):
-    return bytes(a ^ b for a, b in zip(data, key))
-
-def decrypt_file_xor(filename, key):
-    with open(filename, "rb") as file:
-        data = file.read()
-    decrypted_data = decrypt_xor(data, key)
-    with open("DC-" + filename, "wb") as file:
-        file.write(decrypted_data)
-
-def encrypt_hash(data, key):
-    hash_key = hashlib.sha256(key.encode()).digest()
-    return encrypt_xor(data, hash_key)
-
-def encrypt_file_hash(filename, key):
-    with open(filename, "rb") as file:
-        data = file.read()
-    encrypted_data = encrypt_hash(data, key)
-    with open("CC-" + filename, "wb") as file:
-        file.write(encrypted_data)
-
-def decrypt_hash(data, key):
-    hash_key = hashlib.sha256(key.encode()).digest()
-    return decrypt_xor(data, hash_key)
-
-def decrypt_file_hash(filename, key):
-    with open(filename, "rb") as file:
-        data = file.read()
-    decrypted_data = decrypt_hash(data, key)
-    with open("DC-" + filename, "wb") as file:
-        file.write(decrypted_data)
-
-def user_application():
-    choice = ""
-    while choice != "4":
-        print("Please select your option.")
-        print("1. Encrypt File with XOR")
-        print("2. Decrypt File with XOR")
-        print("3. Encrypt File with Hash")
-        print("4. Decrypt File with Hash")
-        print("5. Quit")
-        choice = input()
-        if choice in ["1", "2", "3", "4"]:
-            key = input("Enter a key:\n")
-            filename = input("Enter filename with extension:\n")
-        if choice == "1":
-            encrypt_file_xor(filename, key)
-            print(f"File '{filename}' encrypted with XOR key: {key}")
-        elif choice == "2":
-            decrypt_file_xor(filename, key)
-            print(f"File '{filename}' decrypted with XOR key: {key}")
-        elif choice == "3":
-            encrypt_file_hash(filename, key)
-            print(f"File '{filename}' encrypted with hash key: {key}")
-        elif choice == "4":
-            decrypt_file_hash(filename, key)
-            print(f"File '{filename}' decrypted with hash key: {key}")
-        elif choice == "5":
-            break
-        else:
-            print("Invalid option. Please try again.")
 
 
 
- # get file
+
+
+# get file
 def get_file():
-    filename = filedialog.askopenfilename()
-    new_options = [(str)(filename)]
-    dropdown['values'] = options + new_options
+    file_path = filedialog.askopenfilename() # open dialog for file input 
+    file_type = os.path.splitext(file_path)[1] # extract file ectention
+    file_name = os.path.basename(file_path) # extract file name
+
+    
+    entry0.delete(0, tk.END)  # Clear the current text
+    entry0.insert(0, file_name)  # Insert the new text
+    
+ 
     #print("Selected file path:", file_path)
 
 
 #GUI============================================================================================== 
 
-root = tk.Tk(className='Python Examples - Frame with Widgets')
-root.geometry("1000x500")
-root.configure(bg='black')
+root = tk.Tk(className='Encryption Project')
 
-frame = tk.Frame(master=root, background='#000000')
+root.geometry("500x450")
+root.configure(background='#000000')
+
+frame = tk.Frame(master=root, background='#000000', relief=tk.GROOVE, bd=1)
 frame.pack(pady=20, padx=60)
 
 #row 0
-label2 = tk.Label(master=frame, text="Shhhhhh! It's a secret", background='#000000', foreground='#FFFFFF')
-label2.grid(row=0, column=2, pady=12, padx=10)
+label2 = tk.Label(master=frame, text="Shhhhhh! It's a secret", background='#000000', foreground='#20C20E', font=("", 20))
+label2.grid(row=0, column=0 ,columnspan=3, pady=12, padx=10 ) 
+
 
 # row 1
-label = tk.Label(master=frame, text="File:", relief=tk.RIDGE, bd=2, background='#000000', foreground='#FFFFFF')
-label.grid(row=1, column=0, padx=5)
+label = tk.Label(master=frame, text="File:", relief=tk.GROOVE, bd=1, background='#000000', foreground='#20C20E')
+label.grid(row=1, column=0,padx = 10,sticky="W")
 
-options = []
-dropdown = ttk.Combobox(master=frame, values=options, state='readonly')
-dropdown.grid(row=1, column=1, padx=15)
+entry0 = tk.Entry(master=frame, text='Select a File', foreground='#20C20E', background='#000000',relief=tk.GROOVE, bd=1)
+entry0.grid(row=1, column=1 ,padx = 10,columnspan=2 , sticky="W")
 
-button = tk.Button(master=frame, text="Browse", bg='black', fg='white', relief=tk.RAISED, bd=2 ,command=get_file)
-button.grid(row=1, column=2, padx=5)
+button = tk.Button(master=frame, text="Browse", bg='black', fg='#20C20E', relief=tk.GROOVE, bd=1, command=get_file)
+button.grid(row=1, column=2 )
 
 #row 2
-label = ttk.Label(frame, text="Choose an option:", relief="groove", padding=5, foreground='#FFFFFF', background='#000000')
+label = tk.Label(frame, text="Choose an option:",relief=tk.GROOVE, bd=1, foreground='#20C20E', background='#000000')
+label.grid(row=2, column=0 ,padx = 10, sticky="W")
 
-label.grid(row=2, column=0, padx=5, pady=5)
-
-options = ["Option 1", "Option 2", "Option 3", "Option 4"]
+options2 = ["Option 1", "Option 2"]
 var = tk.StringVar()
-var.set(options[0])
+var.set(options2[0])
 
-for i, option in enumerate(options):
-    radio_button = ttk.Radiobutton(frame, text=option, variable=var, value=option)
+for i, option in enumerate(options2):
+    radio_button = Radiobutton(frame, text=option, variable=var, value=option,bg='#000000', fg = '#20C20E' ,highlightbackground = 'black',highlightcolor ='black' , selectcolor ='black' )
 
-
-    radio_button.grid(row=2, column=i+1, padx=5, pady=5)
+    radio_button.grid(row=2, column=i+1 ,padx = 10, sticky="W")
 
 #row 3
-label = ttk.Label(frame, text="Key:", relief="groove", padding=5, foreground='#FFFFFF', background='#000000')
-label.grid(row=3, column=0, padx=5, pady=5)
+label = tk.Label(frame, text="Key:", relief=tk.GROOVE, bd=1, foreground='#20C20E', background='#000000')
+label.grid(row=3, column=0 , padx = 10,sticky="W")
 
-entry1 = tk.Entry(master=frame, text='key', foreground='#FFFFFF', background='#000000')
-entry1.grid(row=3, column=2, pady=12, padx=10)
+entry1 = tk.Entry(master=frame, text='key', foreground='#20C20E', background='#000000',relief=tk.GROOVE, bd=1)
+entry1.grid(row=3, column=1 ,padx = 10,columnspan=2 , sticky="W")
 
 #row 4
-label = ttk.Label(frame, relief="groove", padding=5, foreground='#FFFFFF', background='#000000')
-label.grid(row=4, column=0, padx=5, pady=5)
 
-options = ["Encrypt", "Decrypt"]
+options3 = ["Encrypt", "Decrypt"]
 var = tk.StringVar()
-var.set(options[0])
+var.set(options3[0])
 
-for i, option in enumerate(options):
-    radio_button = ttk.Radiobutton(label, text=option, variable=var, value=option)
-    radio_button.grid(row=0, column=i, padx=5, pady=5)
-
+for i, option in enumerate(options3):
+    radio_button = Radiobutton(frame, text=option, variable=var, value=option ,bg='#000000', fg = '#20C20E',highlightbackground = 'black',highlightcolor ='black' , selectcolor ='black')
+    radio_button.grid(row=4, padx = 10,column=i+1 , sticky="W")
 #row 5
-listbox1 = tk.Listbox(master=frame, fg='#FFFFFF', bg='#000000')
-listbox1.grid(row=5, column=0, padx=5, pady=5)
+listbox1 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
+listbox1.grid(row=5, column=0,padx = 10,columnspan=2,sticky="W" )
 
-listbox2 = tk.Listbox(master=frame, fg='#FFFFFF', bg='#000000')
-listbox2.grid(row=5, column=1, padx=5, pady=5)
+listbox2 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
+listbox2.grid(row=5, column=2 ,padx = 10,sticky="E")
 
 #row 6 
+def update_progress(progress):
+    progress_width = progress * frame.winfo_width() // 10
+    progressbar.coords("progress", 0, 0, progress_width, 20)
+    if progress < 10:
+        root.after(100, update_progress, progress + 1)
 
 # add progress bar
-progressbar = ttk.Progressbar(master=root, orient=tk.HORIZONTAL, mode='indeterminate')
-progressbar.pack(side=tk.BOTTOM, fill=tk.X)
+progressbar = tk.Canvas(frame,height=20, bg='#000000', highlightthickness=0, relief=tk.GROOVE, bd=1)
+progressbar.grid(row=6, column=0,columnspan=3 , sticky="W")
+
+progressbar.create_rectangle(0, 0, 0, 20, fill='#20C20E', width=0, tags="progress")
+
+# start progress
+update_progress(1)
+
 root.mainloop()
 
