@@ -1,8 +1,9 @@
 import hashlib
-from logging import PlaceHolder #dont remove
-from textwrap import fill #dont remove
+#from logging import PlaceHolder #dont remove
+#from textwrap import fill #dont remove
 import tkinter as tk # dont remove
 from tkinter import ttk # dont remove
+from tkinter import filedialog # dont remove
 # algorithms =============================================================================================
 def encrypt_xor(data, key):
     return bytes(a ^ b for a, b in zip(data, key))
@@ -78,6 +79,14 @@ def user_application():
 
 
 
+ # get file
+def get_file():
+    filename = filedialog.askopenfilename()
+    new_options = [(str)(filename)]
+    dropdown['values'] = options + new_options
+    #print("Selected file path:", file_path)
+
+
 #GUI============================================================================================== 
 
 root = tk.Tk(className='Python Examples - Frame with Widgets')
@@ -95,11 +104,11 @@ label2.grid(row=0, column=2, pady=12, padx=10)
 label = tk.Label(master=frame, text="File:", relief=tk.RIDGE, bd=2, background='#000000', foreground='#FFFFFF')
 label.grid(row=1, column=0, padx=5)
 
-options = ["Option 1", "Option 2", "Option 3"]
+options = []
 dropdown = ttk.Combobox(master=frame, values=options, state='readonly')
-dropdown.grid(row=1, column=1, padx=5)
+dropdown.grid(row=1, column=1, padx=15)
 
-button = tk.Button(master=frame, text="Browse", bg='black', fg='white', relief=tk.RAISED, bd=2)
+button = tk.Button(master=frame, text="Browse", bg='black', fg='white', relief=tk.RAISED, bd=2 ,command=get_file)
 button.grid(row=1, column=2, padx=5)
 
 #row 2
@@ -143,5 +152,10 @@ listbox1.grid(row=5, column=0, padx=5, pady=5)
 listbox2 = tk.Listbox(master=frame, fg='#FFFFFF', bg='#000000')
 listbox2.grid(row=5, column=1, padx=5, pady=5)
 
+#row 6 
+
+# add progress bar
+progressbar = ttk.Progressbar(master=root, orient=tk.HORIZONTAL, mode='indeterminate')
+progressbar.pack(side=tk.BOTTOM, fill=tk.X)
 root.mainloop()
 
