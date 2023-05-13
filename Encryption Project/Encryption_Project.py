@@ -24,7 +24,7 @@ def AES_encrypt():
 
     fsize = os.path.getsize(file_path)
 
-    with open(file_name, 'rb') as fin, with open('output.bin', 'wb') as fout:
+    with open(file_path, 'rb') as fin, open('output.bin', 'wb') as fout:
         while True:
             data = fin.read(size)
             n = len(data)
