@@ -3,8 +3,7 @@ import tkinter as tk
 from tkinter import Radiobutton, messagebox, filedialog, font, ttk
 import os
 # DES Imports
-from Crypto.Cipher import DES3
-from Crypto.Random import get_random_bytes
+from Crypto.Cipher import DES
 #Global
 file_flag = False
 file_path = ''
@@ -17,17 +16,28 @@ file_path = ''
 #DES Encrypt & decrypt #Jaap
 
 
-# Avoid Option 3
-while True:
-    try:
-        key = DES3.adjust_key_parity(get_random_bytes(24))
-        break
-    except ValueError:
-        pass
 
-cipher = DES3.new(key, DES3.MODE_CFB)
-plaintext = b'We are no longer the knights who say ni!'
-msg = cipher.iv + cipher.encrypt(plaintext)
+
+# Set the key and initialization vector (IV)
+key = b'secretkey'
+iv = b'12345678'
+
+# Create a DES cipher object with the key and IV
+cipher = DES.new(key, DES.MODE_CBC, iv)
+
+# Open the input and output files
+with open('input.bin', 'rb') as input_file, open('output.bin', 'wb') as output_file:
+    # Read the input file in blocks of 8 bytes
+    while True:
+        block = input_file.read(8)
+        if not block:
+            break  # Reached end of file
+        # Pad the block if necessary
+        if len(block) < 8:
+            block += b'\0' * (8 - len(block))
+        # Encrypt the block and write it to the output file
+        encrypted_block = cipher.encrypt(block)
+        output_file.write(encrypted_block)
 
 
 
