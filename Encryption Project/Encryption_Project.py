@@ -19,7 +19,7 @@ file_path = ''
 
 
 # Set the key and initialization vector (IV)
-key = b'secretkey'
+key = b'secretkey toets 12'
 iv = b'12345678'
 
 # Create a DES cipher object with the key and IV
