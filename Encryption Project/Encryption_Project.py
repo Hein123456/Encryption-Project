@@ -145,7 +145,36 @@ def decode_rot47(keyword):
     return result
 
 #hash 16
+def hash_keyword(keyword):
+    # Create a SHA-256 hash object
+    sha256 = hashlib.sha256()
 
+    # Update the hash object with the keyword
+    sha256.update(keyword.encode())
+
+    # Get the first 16 bytes of the hash as bytes
+    hash_bytes = sha256.digest()[:16]
+
+    # Convert the bytes to a hex string
+    hash_hex = hash_bytes.hex()
+
+    return hash_hex
+#hash 8
+
+def hash_keyword(keyword):
+    # Create a SHA-256 hash object
+    sha256 = hashlib.sha256()
+
+    # Update the hash object with the keyword
+    sha256.update(keyword.encode())
+
+    # Get the first 8 bytes of the hash as bytes
+    hash_bytes = sha256.digest()[:8]
+
+    # Convert the bytes to a hex string
+    hash_hex = hash_bytes.hex()
+
+    return hash_hex
 # locked file 1 pass 2 file #Jaap
 
 
