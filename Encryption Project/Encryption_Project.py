@@ -66,7 +66,7 @@ def DES_decrypt():
            decrypted_block = DES.decrypt(block)
            output_file.write(decrypted_block)
 
-            # 8 byte to 16 byte
+            # 8 byte to 16 byte help my asseblief
 def convert_file():
     with open('input_file.bin', 'rb') as input_file, open('output_file.bin', 'wb') as output_file:
     # Read the input file in blocks of 16 bytes
