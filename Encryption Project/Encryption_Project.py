@@ -2,14 +2,32 @@
 import tkinter as tk
 from tkinter import Radiobutton, messagebox, filedialog, font, ttk
 import os
+import random
 # DES Imports
 from Crypto.Cipher import DES
+# AES Imports
+from Crypto.Cipher import AES
 #Global
 file_flag = False
 file_path = ''
+file_name = ''
+key = ""
+iv = ""
 
 #AES encrypt & decrypt #Skyf
-key = "Hello there"
+def AES_encrypt():
+    key = "Working progress"
+    iv = ''.join([chr(random.randint(0, 0xFF)) for i in range(16)])
+
+    aes = AES.new(key, AES.MODE_CBC, iv)
+
+    with open(file_name, 'rb') as fin, open()
+
+    
+
+
+
+    
 
 
 
