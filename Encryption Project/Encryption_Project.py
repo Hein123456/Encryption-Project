@@ -182,7 +182,12 @@ def hash_keyword8(keyword):
 
 
 #source file delete #Skyf
-
+def Remove_file():
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print("The file has been deleted successfully")
+    else:
+        print("The file does not exists!")
 
 # integration #Skyf en Jaap
 
