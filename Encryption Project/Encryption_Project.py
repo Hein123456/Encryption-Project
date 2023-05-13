@@ -1,7 +1,9 @@
-
+#GUI Imports
 import tkinter as tk
 from tkinter import Radiobutton, messagebox, filedialog, font, ttk
 import os
+# DES Imports
+
 
 
 #AES encrypt & decrypt #Skyf
@@ -10,6 +12,7 @@ import os
 
 
 #DES Encrypt & decrypt #Jaap
+
 
 
 
@@ -25,10 +28,18 @@ import os
 
 # integration #Skyf en Jaap
 
-
-
+# get file bytes
+def get_file_bytes():
+    if file_flag:
+        with open(file_path, 'rb') as input_file:
+            file_bytes = input_file.read()
+        return file_bytes
+    else:
+        #print("File flag is False. The script will now exit.")
+        exit()  # stop the script
 #gui #Jaap
 def get_file():
+    file_flag = True
     file_path = filedialog.askopenfilename()
     file_type = os.path.splitext(file_path)[1]
     file_name = os.path.basename(file_path)
