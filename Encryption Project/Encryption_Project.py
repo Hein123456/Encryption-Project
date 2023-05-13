@@ -22,9 +22,9 @@ def AES_encrypt():
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
-    fsize = os.path.getsize(file_name)
+    fsize = os.path.getsize(file_path)
 
-    with open(encodedfile, 'wb') as fout:
+    with open('output.bin', 'wb') as fout:
         fout.write(struct.pack('<Q', fsize))
 
     with open(file_name, 'rb') as fin:
@@ -39,7 +39,7 @@ def AES_encrypt():
             fout.write(encoded)
 
     
-
+#jou poes
 
 
     
