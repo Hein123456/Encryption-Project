@@ -18,9 +18,7 @@ file_path = ''
 
 
 def DES_encrypt():
-# Set the key and initialization vector (IV)
-    key = b'cecretkey'
-    iv = b'12345678'
+
 
 # Create a DES cipher object with the key and IV
     cipher = DES.new(key, DES.MODE_CBC, iv)
@@ -38,9 +36,32 @@ def DES_encrypt():
         # Encrypt the block and write it to the output file
             encrypted_block = cipher.encrypt(block)
             output_file.write(encrypted_block)
+def DES_decrypt():
+# Open the input and output files
+   with open('decrypted_output.bin', 'wb') as output_file:
+    # Read the input file in blocks of 8 bytes
+     while True:
+           block = file_path.read(8)
+           if not block:
+              break  # Reached end of file
+          # Decrypt the block and write it to the output file
+           decrypted_block = DES.decrypt(block)
+           output_file.write(decrypted_block)
 
-
-
+            # 8 byte to 16 byte
+def convert_file():
+    with open('input_file.bin', 'rb') as input_file, open('output_file.bin', 'wb') as output_file:
+    # Read the input file in blocks of 16 bytes
+      while True:
+        block = input_file.read(16)
+        if not block:
+            break  # Reached end of file
+         # Split the block into two 8-byte blocks
+        block1 = block[:8]
+        block2 = block[8:]
+        # Write the two blocks to the output file
+        output_file.write(block1)
+        output_file.write(block2)
 # ROT47 pass Encrypt #Skyf
 
 
