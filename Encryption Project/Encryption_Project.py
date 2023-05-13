@@ -3,6 +3,31 @@ import tkinter as tk
 from tkinter import Radiobutton, messagebox, filedialog, font, ttk
 import os
 
+
+#AES encrypt & decrypt #Skyf
+
+
+
+
+#DES Encrypt & decrypt #Jaap
+
+
+
+# ROT47 pass Encrypt #Skyf
+
+
+# locked file 1 pass 2 file #Jaap
+
+
+
+#source file delete #Skyf
+
+
+# integration #Skyf en Jaap
+
+
+
+#gui #Jaap
 def get_file():
     file_path = filedialog.askopenfilename()
     file_type = os.path.splitext(file_path)[1]
