@@ -22,7 +22,7 @@ def AES_encrypt():
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
-    fsize = os.path.getsize(file_name)
+    fsize = os.path.getsize(file_path)
 
     with open(encodedfile, 'wb') as fout:
         fout.write(struct.pack('<Q', fsize))
