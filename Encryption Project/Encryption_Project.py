@@ -16,7 +16,7 @@ file_name = ''
 key = ""
 iv = ""
 size = 2048
-int i = 0
+
 #main
 def run_code():
     print("yes")
