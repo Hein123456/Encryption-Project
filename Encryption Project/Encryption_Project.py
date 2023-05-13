@@ -145,7 +145,7 @@ def decode_rot47(keyword):
     return result
 
 #hash 16
-def hash_keyword(keyword):
+def hash_keyword16(keyword):
     # Create a SHA-256 hash object
     sha256 = hashlib.sha256()
 
@@ -161,7 +161,7 @@ def hash_keyword(keyword):
     return hash_hex
 #hash 8
 
-def hash_keyword(keyword):
+def hash_keyword8(keyword):
     # Create a SHA-256 hash object
     sha256 = hashlib.sha256()
 
