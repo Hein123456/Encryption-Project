@@ -18,10 +18,25 @@ iv = ""
 def AES_encrypt():
     key = "Working progress"
     iv = ''.join([chr(random.randint(0, 0xFF)) for i in range(16)])
+    size = 2048
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
-    with open(file_name, 'rb') as fin, open()
+    fsize = os.path.getsize(file_name)
+
+    with open(encodedfile, 'wb') as fout:
+        fout.write(struct.pack('<Q', fsize))
+
+    with open(file_name, 'rb') as fin:
+        while True:
+            data = fin.read(size)
+            n = len(data)
+            if n == 0:
+                break
+            elif n % 16 != 0:
+                data += ' ' * (16 - n % 16)
+            encoded = aes.encrypt(data)
+            fout.write(encoded)
 
     
 
