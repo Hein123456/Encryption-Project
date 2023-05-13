@@ -30,7 +30,7 @@ def run_code():
   
     convert_file_16_8()
     file_name = os.path.basename(file_path)
-    DES_encrypt(hash_keyword16(rot47_encode(entry1.get())),file_name)
+    DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
 
 
 #AES encrypt & decrypt #Skyf
@@ -171,10 +171,7 @@ def hash_keyword8(keyword):
     # Get the first 8 bytes of the hash as bytes
     hash_bytes = sha256.digest()[:8]
 
-    # Convert the bytes to a hex string
-    hash_hex = hash_bytes.hex()
-
-    return hash_hex
+    return hash_bytes
 # locked file 1 pass 2 file #Jaap
 
 
