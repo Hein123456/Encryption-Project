@@ -13,12 +13,12 @@ file_path = ''
 file_name = ''
 key = ""
 iv = ""
+size = 2048
 
 #AES encrypt & decrypt #Skyf
 def AES_encrypt():
     key = "Working progress"
     iv = ''.join([chr(random.randint(0, 0xFF)) for i in range(16)])
-    size = 2048
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
@@ -36,16 +36,26 @@ def AES_encrypt():
             fout.write(encoded)
 
 def AES_decrypt():
-    with open('filename.enc', rb) as fin:
+    with open(file_name + '.enc', rb) as fin:
         fsize = struct.unpack('<Q', fin.read(struct.calcsize('<Q')))[0]
         iv = fin.read(16)
 
+    aes = AES.new(key, AES.MODE_CBC, iv)
 
+    with open('phase1.bin', 'wb') as fout:
+        while True:
+            data = fin.read(size)
+            if n == 0:
+                break
+            decode = aes.decrypt(data)
+            n = len(data)
+            if fsize > n:
+                fout.write(decode)
+            else:
+                fout.write(decode[:fsize])
 
-
-
-
-
+            fsize -= n
+        
 
 
 def DES_encrypt():
