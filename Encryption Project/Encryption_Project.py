@@ -17,27 +17,27 @@ file_path = ''
 
 
 
-
+def DES_encrypt():
 # Set the key and initialization vector (IV)
-key = b'secretkey toets 123'
-iv = b'12345678'
+    key = b'secretkey'
+    iv = b'12345678'
 
 # Create a DES cipher object with the key and IV
-cipher = DES.new(key, DES.MODE_CBC, iv)
+    cipher = DES.new(key, DES.MODE_CBC, iv)
 
 # Open the input and output files
-with open('input.bin', 'rb') as input_file, open('output.bin', 'wb') as output_file:
+    with open('output.bin', 'wb') as output_file:
     # Read the input file in blocks of 8 bytes
-    while True:
-        block = input_file.read(8)
-        if not block:
-            break  # Reached end of file
+        while True:
+            block = input_file.read(8)
+            if not block:
+                break  # Reached end of file
         # Pad the block if necessary
-        if len(block) < 8:
-            block += b'\0' * (8 - len(block))
+            if len(block) < 8:
+                block += b'\0' * (8 - len(block))
         # Encrypt the block and write it to the output file
-        encrypted_block = cipher.encrypt(block)
-        output_file.write(encrypted_block)
+            encrypted_block = cipher.encrypt(block)
+            output_file.write(encrypted_block)
 
 
 
