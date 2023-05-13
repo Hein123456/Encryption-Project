@@ -146,9 +146,6 @@ def decode_rot47(keyword):
 
 #hash 16
 
-# locked file 1 pass 2 file #Jaap
-
-
 
 #source file delete #Skyf
 
