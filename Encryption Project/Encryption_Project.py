@@ -232,7 +232,7 @@ tk.Button(master=frame, text="Browse", bg='black', fg='#20C20E', **groove_style,
 # row 2
 tk.Label(frame, text="Choose an option:", **groove_style, **label_style).grid(row=2, column=0, padx=10, sticky="W")
 
-options2 = ["Option 1", "Option 2"]
+options2 = ["Default", "Custom"]
 var = tk.StringVar(value=options2[0])
 
 for i, option in enumerate(options2):
