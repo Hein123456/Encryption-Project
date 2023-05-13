@@ -1,4 +1,5 @@
 #GUI Imports
+from asyncio.windows_events import NULL
 import tkinter as tk
 from tkinter import Radiobutton, messagebox, filedialog, font, ttk
 import os
@@ -13,37 +14,38 @@ import hashlib
 file_flag = False
 file_path = ''
 file_name = ''
-key = ""
-iv = ""
+key = b''
+iv = b''
 size = 2048
 
 #main
 def run_code():
-    print("yes")
-    # start progress
-    set_progress(i) 
-    i = i+1
+    
+    #print(entry1.get())
+    #print(rot47_encode(entry1.get()))
+    #print(hash_keyword16(rot47_encode(entry1.get())))
+    file_path = entry0.get()
+    #print(file_path)
+    AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+  
+    convert_file_16_8()
+    file_name = os.path.basename(file_path)
+    DES_encrypt(hash_keyword16(rot47_encode(entry1.get())),file_name)
+
 
 #AES encrypt & decrypt #Skyf
-def AES_encrypt():
-    key = "Working progress"
+def AES_encrypt(file_path,key1):
+    
     iv = ''.join([chr(random.randint(0, 0xFF)) for i in range(16)])
 
-    aes = AES.new(key, AES.MODE_CBC, iv)
-
-    fsize = os.path.getsize(file_path)
-
-    with open(file_path, 'rb') as fin, open('output.bin', 'wb') as fout:
-        while True:
-            data = fin.read(size)
-            n = len(data)
-            if n == 0:
-                break
-            elif n % 16 != 0:
-                data += ' ' * (16 - n % 16)
-            encoded = aes.encrypt(data)
-            fout.write(encoded)
-
+    key = b'Sixteen byte key'
+    cipher = AES.new(key, AES.MODE_EAX)
+    #print(get_file_bytes)
+    nonce = cipher.nonce
+    ciphertext, tag = cipher.encrypt_and_digest(get_file_bytes(file_path))
+    with open('encfase1.bin', 'wb') as fout:
+        fout.write(ciphertext)
+    #print(ciphertext)
 def AES_decrypt():
     with open(file_name + '.enc', rb) as fin:
         fsize = struct.unpack('<Q', fin.read(struct.calcsize('<Q')))[0]
@@ -67,25 +69,13 @@ def AES_decrypt():
         
 
 
-def DES_encrypt():
+def DES_encrypt(key3,file_name):
+    cipher = DES.new(key3, DES.MODE_OFB)
+
+    with open('encfase2.bin', 'rb') as input_file, open('CC-' + file_name, 'wb') as output_file:        
+        output_file.write(cipher.iv + cipher.encrypt(input_file.read()))
 
 
-# Create a DES cipher object with the key and IV
-    cipher = DES.new(key, DES.MODE_CBC, iv)
-
-# Open the input and output files
-    with open('output.bin', 'wb') as output_file:
-    # Read the input file in blocks of 8 bytes
-        while True:
-            block = input_file.read(8)
-            if not block:
-                break  # Reached end of file
-        # Pad the block if necessary
-            if len(block) < 8:
-                block += b'\0' * (8 - len(block))
-        # Encrypt the block and write it to the output file
-            encrypted_block = cipher.encrypt(block)
-            output_file.write(encrypted_block)
 
 def DES_decrypt():
 # Open the input and output files
@@ -100,8 +90,8 @@ def DES_decrypt():
            output_file.write(decrypted_block)
 
             # 8 byte to 16 byte help my asseblief
-def convert_file():
-    with open('input_file.bin', 'rb') as input_file, open('output_file.bin', 'wb') as output_file:
+def convert_file_16_8():
+    with open('encfase1.bin', 'rb') as input_file, open('encfase2.bin', 'wb') as output_file:
     # Read the input file in blocks of 16 bytes
       while True:
         block = input_file.read(16)
@@ -113,6 +103,9 @@ def convert_file():
         # Write the two blocks to the output file
         output_file.write(block1)
         output_file.write(block2)
+
+
+
 # ROT47 pass Encrypt #Skyf
 def rot47_encode(keyword):
     encoded_keyword = ""
@@ -152,21 +145,20 @@ def decode_rot47(keyword):
     return result
 
 #hash 16
+
+
 def hash_keyword16(keyword):
     # Create a SHA-256 hash object
     sha256 = hashlib.sha256()
 
-
     # Update the hash object with the keyword
     sha256.update(keyword.encode())
 
-    # Get the first 16 bytes of the hash as bytes
+    # Get the first 13 bytes of the hash as bytes
     hash_bytes = sha256.digest()[:16]
 
-    # Convert the bytes to a hex string
-    hash_hex = hash_bytes.hex()
+    return hash_bytes
 
-    return hash_hex
 #hash 8
 
 def hash_keyword8(keyword):
@@ -199,23 +191,20 @@ def Remove_file():
 # integration #Skyf en Jaap
 
 # get file bytes
-def get_file_bytes():
-    if file_flag:
-        with open(file_path, 'rb') as input_file:
+def get_file_bytes(file_path):
+    with open(file_path, 'rb') as input_file:
             file_bytes = input_file.read()
-        return file_bytes
-    else:
-        #print("File flag is False. The script will now exit.")
-        exit()  # stop the script
+            return file_bytes
 #gui #Jaap
 def get_file():
-    file_flag = True
+    #file_flag = True
     file_path = filedialog.askopenfilename()
     file_type = os.path.splitext(file_path)[1]
-    file_name = os.path.basename(file_path)
+   
 
     entry0.delete(0, tk.END)
-    entry0.insert(0, file_name)
+    entry0.insert(0, file_path)
+    
 
 root = tk.Tk(className='Encryption Project')
 
@@ -254,6 +243,7 @@ for i, option in enumerate(options2):
 # row 3
 tk.Label(frame, text="Key:", **groove_style, **label_style).grid(row=3, column=0, padx=10, sticky="W")
 entry1 = tk.Entry(master=frame, foreground='#20C20E', background='#000000', **groove_style)
+entry1.insert(0, "Hello, World!")
 entry1.grid(row=3, column=1, padx=10, columnspan=2, sticky="W")
 
 # row 4
