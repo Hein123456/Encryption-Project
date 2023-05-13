@@ -16,7 +16,9 @@ file_name = ''
 key = ""
 iv = ""
 size = 2048
-
+#main
+def run_code():
+    print("yes")
 #AES encrypt & decrypt #Skyf
 def AES_encrypt():
     key = "Working progress"
@@ -256,7 +258,7 @@ for i, option in enumerate(options3):
 #row 5
 listbox1 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
 listbox1.grid(row=5, column=0,padx = 10,columnspan=2,sticky="W" )
-
+tk.Button(master=frame, text="Execute", bg='black', fg='#20C20E', **groove_style, command=run_code).grid(row=5, column=1)
 listbox2 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
 listbox2.grid(row=5, column=2 ,padx = 10,sticky="E")
 
