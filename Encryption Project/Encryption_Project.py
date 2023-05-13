@@ -151,6 +151,7 @@ def hash_keyword16(keyword):
     # Create a SHA-256 hash object
     sha256 = hashlib.sha256()
 
+
     # Update the hash object with the keyword
     sha256.update(keyword.encode())
 
@@ -178,6 +179,7 @@ def hash_keyword8(keyword):
 
     return hash_hex
 # locked file 1 pass 2 file #Jaap
+
 
 
 
