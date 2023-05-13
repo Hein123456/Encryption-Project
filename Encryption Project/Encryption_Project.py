@@ -19,7 +19,7 @@ file_path = ''
 
 def DES_encrypt():
 # Set the key and initialization vector (IV)
-    key = b'secretkey'
+    key = b'cecretkey'
     iv = b'12345678'
 
 # Create a DES cipher object with the key and IV
