@@ -7,6 +7,8 @@ import random
 from Crypto.Cipher import DES
 # AES Imports
 from Crypto.Cipher import AES
+#hash
+import hashlib
 #Global
 file_flag = False
 file_path = ''
@@ -142,7 +144,22 @@ def decode_rot47(keyword):
     # Return the decoded result
     return result
 
+#hash 16
 
+def hash_keyword(keyword):
+    # Create a SHA-256 hash object
+    sha256 = hashlib.sha256()
+
+    # Update the hash object with the keyword
+    sha256.update(keyword.encode())
+
+    # Get the first 16 bytes of the hash as bytes
+    hash_bytes = sha256.digest()[:16]
+
+    # Convert the bytes to a hex string
+    hash_hex = hash_bytes.hex()
+
+    return hash_hex
 # locked file 1 pass 2 file #Jaap
 
 
