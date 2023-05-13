@@ -7,6 +7,8 @@ import random
 from Crypto.Cipher import DES
 # AES Imports
 from Crypto.Cipher import AES
+#hash
+import hashlib
 #Global
 file_flag = False
 file_path = ''
@@ -142,9 +144,7 @@ def decode_rot47(keyword):
     # Return the decoded result
     return result
 
-
-# locked file 1 pass 2 file #Jaap
-
+#hash 16
 
 
 #source file delete #Skyf
