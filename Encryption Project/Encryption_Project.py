@@ -1,28 +1,15 @@
 
-import tkinter as tk # dont remove
-from tkinter import Radiobutton, messagebox, filedialog, filedialog ,font,ttk# dont remove
-import os  # dont remove
-# algorithms =============================================================================================
+import tkinter as tk
+from tkinter import Radiobutton, messagebox, filedialog, font, ttk
+import os
 
-
-
-
-
-# get file
 def get_file():
-    file_path = filedialog.askopenfilename() # open dialog for file input 
-    file_type = os.path.splitext(file_path)[1] # extract file ectention
-    file_name = os.path.basename(file_path) # extract file name
+    file_path = filedialog.askopenfilename()
+    file_type = os.path.splitext(file_path)[1]
+    file_name = os.path.basename(file_path)
 
-    
-    entry0.delete(0, tk.END)  # Clear the current text
-    entry0.insert(0, file_name)  # Insert the new text
-    
- 
-    #print("Selected file path:", file_path)
-
-
-#GUI============================================================================================== 
+    entry0.delete(0, tk.END)
+    entry0.insert(0, file_name)
 
 root = tk.Tk(className='Encryption Project')
 
@@ -32,50 +19,48 @@ root.configure(background='#000000')
 frame = tk.Frame(master=root, background='#000000', relief=tk.GROOVE, bd=1)
 frame.pack(pady=20, padx=60)
 
-#row 0
-label2 = tk.Label(master=frame, text="Shhhhhh! It's a secret", background='#000000', foreground='#20C20E', font=("", 20))
-label2.grid(row=0, column=0 ,columnspan=3, pady=12, padx=10 ) 
+# Label styles
+label_style = {'background': '#000000', 'foreground': '#20C20E'}
+groove_style = {'relief': tk.GROOVE, 'bd': 1}
 
+# row 0
+label2 = tk.Label(master=frame, text="Shhhhhh! It's a secret", font=("", 20), **label_style)
+label2.grid(row=0, column=0, columnspan=3, pady=12, padx=10)
 
 # row 1
-label = tk.Label(master=frame, text="File:", relief=tk.GROOVE, bd=1, background='#000000', foreground='#20C20E')
-label.grid(row=1, column=0,padx = 10,sticky="W")
+tk.Label(master=frame, text="File:", **groove_style, **label_style).grid(row=1, column=0, padx=10, sticky="W")
+entry0 = tk.Entry(master=frame, foreground='#20C20E', background='#000000', **groove_style)
+entry0.grid(row=1, column=1, padx=10, columnspan=2, sticky="W")
+tk.Button(master=frame, text="Browse", bg='black', fg='#20C20E', **groove_style, command=get_file).grid(row=1, column=2)
 
-entry0 = tk.Entry(master=frame, text='Select a File', foreground='#20C20E', background='#000000',relief=tk.GROOVE, bd=1)
-entry0.grid(row=1, column=1 ,padx = 10,columnspan=2 , sticky="W")
-
-button = tk.Button(master=frame, text="Browse", bg='black', fg='#20C20E', relief=tk.GROOVE, bd=1, command=get_file)
-button.grid(row=1, column=2 )
-
-#row 2
-label = tk.Label(frame, text="Choose an option:",relief=tk.GROOVE, bd=1, foreground='#20C20E', background='#000000')
-label.grid(row=2, column=0 ,padx = 10, sticky="W")
+# row 2
+tk.Label(frame, text="Choose an option:", **groove_style, **label_style).grid(row=2, column=0, padx=10, sticky="W")
 
 options2 = ["Option 1", "Option 2"]
-var = tk.StringVar()
-var.set(options2[0])
+var = tk.StringVar(value=options2[0])
 
 for i, option in enumerate(options2):
-    radio_button = Radiobutton(frame, text=option, variable=var, value=option,bg='#000000', fg = '#20C20E' ,highlightbackground = 'black',highlightcolor ='black' , selectcolor ='black' )
+    Radiobutton(
+        frame, text=option, variable=var, value=option, bg='#000000', fg='#20C20E',
+        highlightbackground='black', highlightcolor='black', selectcolor='black'
+    ).grid(row=2, column=i+1, padx=10, sticky="W")
 
-    radio_button.grid(row=2, column=i+1 ,padx = 10, sticky="W")
+# row 3
+tk.Label(frame, text="Key:", **groove_style, **label_style).grid(row=3, column=0, padx=10, sticky="W")
+entry1 = tk.Entry(master=frame, foreground='#20C20E', background='#000000', **groove_style)
+entry1.grid(row=3, column=1, padx=10, columnspan=2, sticky="W")
 
-#row 3
-label = tk.Label(frame, text="Key:", relief=tk.GROOVE, bd=1, foreground='#20C20E', background='#000000')
-label.grid(row=3, column=0 , padx = 10,sticky="W")
-
-entry1 = tk.Entry(master=frame, text='key', foreground='#20C20E', background='#000000',relief=tk.GROOVE, bd=1)
-entry1.grid(row=3, column=1 ,padx = 10,columnspan=2 , sticky="W")
-
-#row 4
+# row 4
+tk.Label(frame, text="Mode:", **groove_style, **label_style).grid(row=4, padx=10, sticky="W")
 
 options3 = ["Encrypt", "Decrypt"]
-var = tk.StringVar()
-var.set(options3[0])
+var = tk.StringVar(value=options3[0])
 
 for i, option in enumerate(options3):
-    radio_button = Radiobutton(frame, text=option, variable=var, value=option ,bg='#000000', fg = '#20C20E',highlightbackground = 'black',highlightcolor ='black' , selectcolor ='black')
-    radio_button.grid(row=4, padx = 10,column=i+1 , sticky="W")
+    Radiobutton(
+        frame, text=option, variable=var, value=option, bg='#000000', fg='#20C20E',
+        highlightbackground='black', highlightcolor='black', selectcolor='black'
+    ).grid(row=4, column=i+1, padx=10, sticky="W")
 #row 5
 listbox1 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
 listbox1.grid(row=5, column=0,padx = 10,columnspan=2,sticky="W" )
