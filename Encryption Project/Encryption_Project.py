@@ -30,7 +30,7 @@ def run_code():
             update_progress(6)
             xoe_Encrypt(file_name,text_to_int(entry1.get()))
             update_progress(10)
-            listbox2.items.add("File encrypted successfully")
+            listbox2.insert(tk.END,"File encrypted successfully")
         if var2.get() == "Decrypt":
             update_progress(1)
             file_path = entry0.get()
@@ -39,7 +39,7 @@ def run_code():
             update_progress(6)
             xor_Decrypt(file_name, text_to_int(entry1.get()))
             update_progress(10)
-            listbox2.items.add("File decrypted successfully")
+            listbox2.insert(tk.END,"File decrypted successfully")
 
 
     if var1.get() == "Custom":
@@ -69,9 +69,10 @@ def run_code():
             update_progress(3)
             file_name = os.path.basename(file_path)
             update_progress(5)
+            convert_file_8_16(file_name)
             AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
             update_progress(7)
-            convert_file_8_16()
+            convert_file_16_8()
             update_progress(9)
             DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
@@ -164,8 +165,8 @@ def text_to_int(text_input):
     byte_int = int.from_bytes(byte_str, 'big')
     return byte_int % 256 + 1
 
-def convert_file_8_16():
-    with open('decfase1.bin', 'rb') as input_file, open('decfase2.bin', 'wb') as output_file:
+def convert_file_8_16(file_name):
+    with open(file_name, 'rb') as input_file, open('decfase2.bin', 'wb') as output_file:
         # Read the input file in blocks of 8 bytes
         while True:
             block = input_file.read(8)
