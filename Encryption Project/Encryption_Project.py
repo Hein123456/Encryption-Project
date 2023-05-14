@@ -1,7 +1,8 @@
 #GUI Imports
 from asyncio.windows_events import NULL
+from msilib.schema import RadioButton
 import tkinter as tk
-from tkinter import Radiobutton, messagebox, filedialog, font, ttk
+from tkinter import Radiobutton, Variable, messagebox, filedialog, font, ttk
 import os
 import random
 # DES Imports
@@ -18,19 +19,34 @@ key = b''
 iv = b''
 size = 2048
 
+
 #main
 def run_code():
+    if var1.get() == "Encrypt":
+        #print(entry1.get())
+        #print(rot47_encode(entry1.get()))
+        #print(hash_keyword16(rot47_encode(entry1.get())))
+        file_path = entry0.get()
+        #print(file_path)
+        AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+  
+        convert_file_16_8()
+        file_name = os.path.basename(file_path)
+        DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+    selection =var1.get()
+    
+    selection =var2.get()
     
     #print(entry1.get())
     #print(rot47_encode(entry1.get()))
     #print(hash_keyword16(rot47_encode(entry1.get())))
-    file_path = entry0.get()
+   # file_path = entry0.get()
     #print(file_path)
-    AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+    #AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
   
-    convert_file_16_8()
-    file_name = os.path.basename(file_path)
-    DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+   # convert_file_16_8()
+   # file_name = os.path.basename(file_path)
+    #DES_encrypt(hash_keyword8v(rot47_encode(entry1.get())),file_name)
 
 
 #AES encrypt & decrypt #Skyf
@@ -229,12 +245,12 @@ tk.Button(master=frame, text="Browse", bg='black', fg='#20C20E', **groove_style,
 tk.Label(frame, text="Choose an option:", **groove_style, **label_style).grid(row=2, column=0, padx=10, sticky="W")
 
 options2 = ["Default", "Custom"]
-var = tk.StringVar(value=options2[0])
+var1 = tk.StringVar(value=options2[0])
 
 for i, option in enumerate(options2):
-    Radiobutton(
-        frame, text=option, variable=var, value=option, bg='#000000', fg='#20C20E',
-        highlightbackground='black', highlightcolor='black', selectcolor='black'
+   rad1= Radiobutton(
+        frame, text=option, value=option, bg='#000000', fg='#20C20E',
+        highlightbackground='black', highlightcolor='black', selectcolor='black' ,variable=var1
     ).grid(row=2, column=i+1, padx=10, sticky="W")
 
 # row 3
@@ -247,12 +263,12 @@ entry1.grid(row=3, column=1, padx=10, columnspan=2, sticky="W")
 tk.Label(frame, text="Mode:", **groove_style, **label_style).grid(row=4, padx=10, sticky="W")
 
 options3 = ["Encrypt", "Decrypt"]
-var = tk.StringVar(value=options3[0])
+var2 = tk.StringVar(value=options3[0])
 
 for i, option in enumerate(options3):
-    Radiobutton(
-        frame, text=option, variable=var, value=option, bg='#000000', fg='#20C20E',
-        highlightbackground='black', highlightcolor='black', selectcolor='black'
+    rad2 = Radiobutton(
+        frame, text=option, value=option, bg='#000000', fg='#20C20E',
+        highlightbackground='black', highlightcolor='black', selectcolor='black', variable=var2
     ).grid(row=4, column=i+1, padx=10, sticky="W")
 #row 5
 listbox1 = tk.Listbox(master=frame, fg='#20C20E', bg='#000000',relief=tk.GROOVE, bd=1)
