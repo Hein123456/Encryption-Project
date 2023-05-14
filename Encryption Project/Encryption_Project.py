@@ -53,7 +53,6 @@ def run_code():
             #print(file_path)
             AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
             update_progress(5)
-  
             convert_file_16_8()
             update_progress(7)
             file_name = os.path.basename(file_path)
@@ -70,7 +69,7 @@ def run_code():
             file_name = os.path.basename(file_path)
             update_progress(5)
             convert_file_8_16(file_name)
-            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
+            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())))
             update_progress(7)
             convert_file_16_8()
             update_progress(9)
@@ -111,22 +110,23 @@ def xor_Decrypt(filename, key):
 
 #AES encrypt & decrypt #Skyf
 def AES_encrypt(file_path,key1):
-    
-    iv = ''.join([chr(random.randint(0, 0xFF)) for i in range(16)])
 
     key = b'Sixteen byte key'
     cipher = AES.new(key, AES.MODE_EAX)
     #print(get_file_bytes)
     nonce = cipher.nonce
+    with open('Stuff.txt', 'wb') as fnonce:
+        fnonce.write(nonce)
     ciphertext, tag = cipher.encrypt_and_digest(get_file_bytes(file_path))
     with open('encfase1.bin', 'wb') as fout:
-        fout.write(nonce)
         fout.write(ciphertext)
     #print(ciphertext)
 
-def AES_decrypt(file_path, key1, nonce):
+def AES_decrypt(file_path, key1):
+    with open('Stuff.txt', 'rb') as fnonce:
+        nonce = fnonce.read(16)
+
     with open('encfase1.bin', 'rb') as fin:
-        nonce = fin.read(16)
         ciphertext = fin.read()
     
     cipher = AES.new(key1, AES.MODE_EAX, nonce)
@@ -159,6 +159,7 @@ def DES_decrypt(key3,file_name):
           # Decrypt the block and write it to the output file
            decrypted_block = cipher.decrypt(block)
            output_file.write(decrypted_block)
+
 
 def text_to_int(text_input):
     byte_str = text_input.encode('ascii')
