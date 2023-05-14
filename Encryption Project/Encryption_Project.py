@@ -22,7 +22,7 @@ size = 2048
 
 #main
 def run_code():
-    if var1.get() == "Encrypt":
+    if var2.get() == "Encrypt":
         #print(entry1.get())
         #print(rot47_encode(entry1.get()))
         #print(hash_keyword16(rot47_encode(entry1.get())))
@@ -33,20 +33,17 @@ def run_code():
         convert_file_16_8()
         file_name = os.path.basename(file_path)
         DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
-    selection =var1.get()
-    
-    selection =var2.get()
-    
-    #print(entry1.get())
-    #print(rot47_encode(entry1.get()))
-    #print(hash_keyword16(rot47_encode(entry1.get())))
-   # file_path = entry0.get()
-    #print(file_path)
-    #AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+
+    if var2.get() == "Decrypt":
+        file_path = entry0.get()
+        file_name = os.path.basename(file_path)
+        DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+        convert_file_8_16()
+        AES_decrypt(file_name)
+       
   
-   # convert_file_16_8()
-   # file_name = os.path.basename(file_path)
-    #DES_encrypt(hash_keyword8v(rot47_encode(entry1.get())),file_name)
+    
+    
 
 
 #AES encrypt & decrypt #Skyf
@@ -62,14 +59,14 @@ def AES_encrypt(file_path,key1):
     with open('encfase1.bin', 'wb') as fout:
         fout.write(ciphertext)
     #print(ciphertext)
-def AES_decrypt():
-    with open(file_name + '.enc', rb) as fin:
+def AES_decrypt(file_name):
+    with open('decfase2.bin'  , 'rb') as fin:
         fsize = struct.unpack('<Q', fin.read(struct.calcsize('<Q')))[0]
         iv = fin.read(16)
 
     aes = AES.new(key, AES.MODE_CBC, iv)
 
-    with open('phase1.bin', 'wb') as fout:
+    with open(file_name, 'wb') as fout:
         while True:
             data = fin.read(size)
             if n == 0:
@@ -90,20 +87,51 @@ def DES_encrypt(key3,file_name):
 
     with open('encfase2.bin', 'rb') as input_file, open('CC-' + file_name, 'wb') as output_file:        
         output_file.write(cipher.iv + cipher.encrypt(input_file.read()))
+        return 'CC-' + file_name
 
 
 
-def DES_decrypt():
+def DES_decrypt(key3,file_name):
+    cipher = DES.new(key3, DES.MODE_OFB)
 # Open the input and output files
-   with open('decrypted_output.bin', 'wb') as output_file:
+    with open(file_name, 'rb') as input_file, open('decfase1.bin', 'wb') as output_file:
     # Read the input file in blocks of 8 bytes
      while True:
-           block = file_path.read(8)
+           block = input_file.read(8)
            if not block:
               break  # Reached end of file
           # Decrypt the block and write it to the output file
-           decrypted_block = DES.decrypt(block)
+           decrypted_block = cipher.decrypt(block)
            output_file.write(decrypted_block)
+
+
+def convert_file_8_16():
+    with open('decfase1.bin', "rb") as input_file:
+    # Read the contents of the input file
+        data = input_file.read()
+
+    # Check if the file size is a multiple of 8
+    if len(data) % 8 != 0:
+        print("Input file size must be a multiple of 8 bytes")
+        exit()
+
+    # Calculate the number of blocks in the input file
+    num_blocks = len(data) // 8
+
+    # Create a new byte array to hold the padded data
+    padded_data = bytearray(num_blocks * 16)
+
+    # Copy the data from the input file into the padded data array
+    for i in range(num_blocks):
+        block_start = i * 8
+        block_end = block_start + 8
+        padded_start = i * 16
+        padded_end = padded_start + 8
+        padded_data[padded_start:padded_end] = data[block_start:block_end]
+
+    # Write the padded data to the output file
+    with open("decfase2.bin", "wb") as output_file:
+        output_file.write(padded_data)
 
             # 8 byte to 16 byte help my asseblief
 def convert_file_16_8():
