@@ -39,7 +39,7 @@ def run_code():
         file_name = os.path.basename(file_path)
         DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
         convert_file_8_16()
-        AES_decrypt(file_name)
+        AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
        
   
     
@@ -59,26 +59,17 @@ def AES_encrypt(file_path,key1):
     with open('encfase1.bin', 'wb') as fout:
         fout.write(ciphertext)
     #print(ciphertext)
-def AES_decrypt(file_name):
-    with open('decfase2.bin'  , 'rb') as fin:
-        fsize = struct.unpack('<Q', fin.read(struct.calcsize('<Q')))[0]
-        iv = fin.read(16)
 
-    aes = AES.new(key, AES.MODE_CBC, iv)
+def AES_decrypt(file_path, key1, nonce):
+    with open('encfase1.bin', 'rb') as fin:
+        ciphertext = fin.read()
+    
+    cipher = AES.new(key1, AES.MODE_EAX, nonce)
+    
+    plaintext = cipher.decrypt(ciphertext)
+    with open('DD-'+file_path, 'wb') as fout:
+        fout.write(plaintext)
 
-    with open(file_name, 'wb') as fout:
-        while True:
-            data = fin.read(size)
-            if n == 0:
-                break
-            decode = aes.decrypt(data)
-            n = len(data)
-            if fsize > n:
-                fout.write(decode)
-            else:
-                fout.write(decode[:fsize])
-
-            fsize -= n
         
 
 
