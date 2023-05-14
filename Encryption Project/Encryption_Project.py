@@ -19,7 +19,6 @@ key = b''
 iv = b''
 size = 2048
 
-
 #main
 def run_code():
     if var1.get() == "Default":
@@ -31,6 +30,7 @@ def run_code():
             update_progress(6)
             xoe_Encrypt(file_name,text_to_int(entry1.get()))
             update_progress(10)
+            listbox2.items.add("File encrypted successfully")
         if var2.get() == "Decrypt":
             update_progress(1)
             file_path = entry0.get()
@@ -39,6 +39,7 @@ def run_code():
             update_progress(6)
             xor_Decrypt(file_name, text_to_int(entry1.get()))
             update_progress(10)
+            listbox2.items.add("File decrypted successfully")
 
 
     if var1.get() == "Custom":
@@ -59,6 +60,8 @@ def run_code():
             update_progress(9)
             DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
+            #Remove_file(file_path)
+            listbox1.items.add("File encrypted successfully")
 
         if var2.get() == "Decrypt":
             update_progress(1)
@@ -66,13 +69,13 @@ def run_code():
             update_progress(3)
             file_name = os.path.basename(file_path)
             update_progress(5)
-            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
             update_progress(7)
             convert_file_8_16()
             update_progress(9)
-            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
+            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
-       
+            listbox1.items.add("File decrypted successfully")
   
  #xor
 def xoe_Encrypt(filename, key):
@@ -116,11 +119,13 @@ def AES_encrypt(file_path,key1):
     nonce = cipher.nonce
     ciphertext, tag = cipher.encrypt_and_digest(get_file_bytes(file_path))
     with open('encfase1.bin', 'wb') as fout:
+        fout.write(nonce)
         fout.write(ciphertext)
     #print(ciphertext)
 
 def AES_decrypt(file_path, key1, nonce):
     with open('encfase1.bin', 'rb') as fin:
+        nonce = fin.read(16)
         ciphertext = fin.read()
     
     cipher = AES.new(key1, AES.MODE_EAX, nonce)
@@ -260,12 +265,12 @@ def hash_keyword8(keyword):
 
 
 #source file delete #Skyf
-def Remove_file():
+def Remove_file(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
-        print("The file has been deleted successfully")
+        listbox1.items.add("File removed successfully")
     else:
-        print("The file does not exists!")
+        listbox1.items.add("File could not be removed")
 
 # integration #Skyf en Jaap
 
