@@ -24,35 +24,54 @@ size = 2048
 def run_code():
     if var1.get() == "Default":
         if var2.get() == "Encrypt":
+            update_progress(1)
             file_path = entry0.get()
+            update_progress(3)
             file_name = os.path.basename(file_path)
+            update_progress(6)
             xoe_Encrypt(file_name,text_to_int(entry1.get()))
-            
+            update_progress(10)
         if var2.get() == "Decrypt":
+            update_progress(1)
             file_path = entry0.get()
+            update_progress(3)
             file_name = os.path.basename(file_path)
+            update_progress(6)
             xor_Decrypt(file_name, text_to_int(entry1.get()))
+            update_progress(10)
 
 
     if var1.get() == "Custom":
         if var2.get() == "Encrypt":
+            update_progress(1)
             #print(entry1.get())
             #print(rot47_encode(entry1.get()))
             #print(hash_keyword16(rot47_encode(entry1.get())))
             file_path = entry0.get()
+            update_progress(3)
             #print(file_path)
             AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+            update_progress(5)
   
             convert_file_16_8()
+            update_progress(7)
             file_name = os.path.basename(file_path)
+            update_progress(9)
             DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            update_progress(10)
 
         if var2.get() == "Decrypt":
+            update_progress(1)
             file_path = entry0.get()
+            update_progress(3)
             file_name = os.path.basename(file_path)
+            update_progress(5)
             DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            update_progress(7)
             convert_file_8_16()
+            update_progress(9)
             AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
+            update_progress(10)
        
   
  #xor
@@ -333,8 +352,8 @@ def set_progress(num):
         num = 1
     elif num > 10:
         num = 10
-    progress = (num - 1) / 9  # scale the number between 0 and 1
-    update_progress(progress)
+    progress_percent = (num - 1) * 10  # calculate progress percentage
+    update_progress(progress_percent / 100)  # update progress bar
 progressbar = tk.Canvas(frame,height=20, bg='#000000', highlightthickness=0, relief=tk.GROOVE, bd=1)
 progressbar.grid(row=6, column=0,columnspan=3 , sticky="W")
 
