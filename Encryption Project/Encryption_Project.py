@@ -61,7 +61,7 @@ def run_code():
             DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
             #Remove_file(file_path)
-            listbox1.items.add("File encrypted successfully")
+            listbox1.insert(tk.END,"File encrypted successfully")
 
         if var2.get() == "Decrypt":
             update_progress(1)
@@ -75,7 +75,7 @@ def run_code():
             update_progress(9)
             DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
-            listbox1.items.add("File decrypted successfully")
+            listbox2.insert(tk.END,"File decrypted successfully")
   
  #xor
 def xoe_Encrypt(filename, key):
@@ -268,9 +268,9 @@ def hash_keyword8(keyword):
 def Remove_file(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
-        listbox1.items.add("File removed successfully")
+        listbox1.insert(tk.END,"File removed successfully")
     else:
-        listbox1.items.add("File could not be removed")
+        listbox1.insert(tk.END,"File could not be removed")
 
 # integration #Skyf en Jaap
 
