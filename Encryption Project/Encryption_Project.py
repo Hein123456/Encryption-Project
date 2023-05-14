@@ -22,27 +22,67 @@ size = 2048
 
 #main
 def run_code():
-    if var2.get() == "Encrypt":
-        #print(entry1.get())
-        #print(rot47_encode(entry1.get()))
-        #print(hash_keyword16(rot47_encode(entry1.get())))
-        file_path = entry0.get()
-        #print(file_path)
-        AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
-  
-        convert_file_16_8()
-        file_name = os.path.basename(file_path)
-        DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+    if var1.get() == "Default":
+        if var2.get() == "Encrypt":
+            file_path = entry0.get()
+            file_name = os.path.basename(file_path)
+            xoe_Encrypt(file_name,text_to_int(entry1.get()))
+            
+        if var2.get() == "Decrypt":
+            file_path = entry0.get()
+            file_name = os.path.basename(file_path)
+            xor_Decrypt(file_name, text_to_int(entry1.get()))
 
-    if var2.get() == "Decrypt":
-        file_path = entry0.get()
-        file_name = os.path.basename(file_path)
-        DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
-        convert_file_8_16()
-        AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
+
+    if var1.get() == "Custom":
+        if var2.get() == "Encrypt":
+            #print(entry1.get())
+            #print(rot47_encode(entry1.get()))
+            #print(hash_keyword16(rot47_encode(entry1.get())))
+            file_path = entry0.get()
+            #print(file_path)
+            AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
+  
+            convert_file_16_8()
+            file_name = os.path.basename(file_path)
+            DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+
+        if var2.get() == "Decrypt":
+            file_path = entry0.get()
+            file_name = os.path.basename(file_path)
+            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            convert_file_8_16()
+            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())),iv)
        
   
+ #xor
+def xoe_Encrypt(filename, key):
+    file = open(filename, "rb")
+    data = file.read()
+    file.close()
     
+    data = bytearray(data)
+    for index, value in enumerate(data):
+        data[index] = value ^ key
+        
+    
+    file = open("CC-" + filename, "wb")
+    file.write(data)
+    file.close()
+    
+def xor_Decrypt(filename, key):
+    file = open(filename, "rb")
+    data = file.read()
+    file.close()
+    
+    data = bytearray(data)
+    for index, value in enumerate(data):
+        data[index] = value ^ key
+        
+    
+    file = open(filename, "wb")
+    file.write(data)
+    file.close()   
     
 
 
@@ -95,6 +135,10 @@ def DES_decrypt(key3,file_name):
            decrypted_block = cipher.decrypt(block)
            output_file.write(decrypted_block)
 
+def text_to_int(text_input):
+    byte_str = text_input.encode('ascii')
+    byte_int = int.from_bytes(byte_str, 'big')
+    return byte_int % 256 + 1
 
 def convert_file_8_16():
     with open('decfase1.bin', 'rb') as input_file, open('decfase2.bin', 'wb') as output_file:
@@ -123,7 +167,6 @@ def convert_file_16_8():
         # Write the two blocks to the output file
         output_file.write(block1)
         output_file.write(block2)
-
 
 
 # ROT47 pass Encrypt #Skyf
