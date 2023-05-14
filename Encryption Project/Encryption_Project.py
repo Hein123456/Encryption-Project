@@ -106,32 +106,17 @@ def DES_decrypt(key3,file_name):
 
 
 def convert_file_8_16():
-    with open('decfase1.bin', "rb") as input_file:
-    # Read the contents of the input file
-        data = input_file.read()
+    with open('decfase1.bin', 'rb') as input_file, open('decfase2.bin', 'wb') as output_file:
+        # Read the input file in blocks of 8 bytes
+        while True:
+            block = input_file.read(8)
+            if not block:
+                break  # Reached end of file
+            # Repeat the block to create a 16-byte block
+            block = block + block
+            # Write the 16-byte block to the output file
+            output_file.write(block)
 
-    # Check if the file size is a multiple of 8
-    if len(data) % 8 != 0:
-        print("Input file size must be a multiple of 8 bytes")
-        exit()
-
-    # Calculate the number of blocks in the input file
-    num_blocks = len(data) // 8
-
-    # Create a new byte array to hold the padded data
-    padded_data = bytearray(num_blocks * 16)
-
-    # Copy the data from the input file into the padded data array
-    for i in range(num_blocks):
-        block_start = i * 8
-        block_end = block_start + 8
-        padded_start = i * 16
-        padded_end = padded_start + 8
-        padded_data[padded_start:padded_end] = data[block_start:block_end]
-
-    # Write the padded data to the output file
-    with open("decfase2.bin", "wb") as output_file:
-        output_file.write(padded_data)
 
             # 8 byte to 16 byte help my asseblief
 def convert_file_16_8():
