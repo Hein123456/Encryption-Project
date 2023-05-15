@@ -59,8 +59,9 @@ def run_code():
             #convert_file_16_8(file_name)
             update_progress(9)
             update_progress(10)
-            #Remove_file(file_path)
+            Remove_file(file_path)
             listbox1.insert(tk.END,"File encrypted successfully")
+            Remove_file('CC-')
 
         if var2.get() == "Decrypt":
             update_progress(1)
@@ -69,7 +70,7 @@ def run_code():
             file_name = os.path.basename(file_path)
             update_progress(5)
             #convert_file_8_16(file_name)
-            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_path)
             AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())), file_name)
             
             update_progress(7)
@@ -78,6 +79,8 @@ def run_code():
             
             update_progress(10)
             listbox2.insert(tk.END,"File decrypted successfully")
+            Remove_file('DD-')
+            Remove_file(file_name)
   
  #xor
 def xoe_Encrypt(filename, key):
@@ -148,8 +151,8 @@ def DES_encrypt(key, file_name):
         output_file.write(iv + cipher.encrypt(input_file.read()))
 
 
-def DES_decrypt(key, file_name):
-    with open(file_name, 'rb') as input_file, open('DD-', 'wb') as output_file:
+def DES_decrypt(key, file_path):
+    with open(file_path, 'rb') as input_file, open('DD-', 'wb') as output_file:
         iv = input_file.read(8)  # Read the IV (first 8 bytes)
         cipher = DES.new(key, DES.MODE_OFB, iv)
         
