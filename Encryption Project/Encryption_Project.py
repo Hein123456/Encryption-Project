@@ -69,12 +69,13 @@ def run_code():
             file_name = os.path.basename(file_path)
             update_progress(5)
             #convert_file_8_16(file_name)
+            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())), file_name)
             
             update_progress(7)
             #convert_file_16_8(file_name)
             update_progress(9)
-            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            
             update_progress(10)
             listbox2.insert(tk.END,"File decrypted successfully")
   
@@ -119,11 +120,11 @@ def AES_encrypt(file_path, key):
     
     ciphertext, tag = cipher.encrypt_and_digest(plaintext)
     
-    with open('CC-' + file_name, 'wb') as fout:
+    with open('CC-', 'wb') as fout:
         fout.write(nonce + ciphertext + tag)
 
 def AES_decrypt(file_path, key, file_name):
-    with open(file_path, 'rb') as fin:
+    with open('DD-', 'rb') as fin:
         data = fin.read()
     
     nonce = data[:16]
@@ -134,7 +135,7 @@ def AES_decrypt(file_path, key, file_name):
     
     plaintext = cipher.decrypt_and_verify(ciphertext, tag)
         
-    with open('DD-DD-' + file_name, 'wb') as fout:
+    with open('DD-'+file_name, 'wb') as fout:
          fout.write(plaintext)
         
 
@@ -143,12 +144,12 @@ def DES_encrypt(key, file_name):
     cipher = DES.new(key, DES.MODE_OFB)
     iv = cipher.iv
 
-    with open(file_name, 'rb') as input_file, open('CC-CC-' + file_name, 'wb') as output_file:
+    with open('CC-', 'rb') as input_file, open( 'CC-' + file_name, 'wb') as output_file:
         output_file.write(iv + cipher.encrypt(input_file.read()))
 
 
 def DES_decrypt(key, file_name):
-    with open(file_name, 'rb') as input_file, open('DD-' + file_name, 'wb') as output_file:
+    with open(file_name, 'rb') as input_file, open('DD-', 'wb') as output_file:
         iv = input_file.read(8)  # Read the IV (first 8 bytes)
         cipher = DES.new(key, DES.MODE_OFB, iv)
         
