@@ -49,15 +49,15 @@ def run_code():
             #print(rot47_encode(entry1.get()))
             #print(hash_keyword16(rot47_encode(entry1.get())))
             file_path = entry0.get()
+            file_name = os.path.basename(file_path)
             update_progress(3)
             #print(file_path)
             AES_encrypt(file_path,hash_keyword16(rot47_encode(entry1.get())))
             update_progress(5)
-            convert_file_16_8()
             update_progress(7)
-            file_name = os.path.basename(file_path)
-            update_progress(9)
             DES_encrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            #convert_file_16_8(file_name)
+            update_progress(9)
             update_progress(10)
             #Remove_file(file_path)
             listbox1.insert(tk.END,"File encrypted successfully")
@@ -68,10 +68,11 @@ def run_code():
             update_progress(3)
             file_name = os.path.basename(file_path)
             update_progress(5)
-            convert_file_8_16(file_name)
-            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())))
+            #convert_file_8_16(file_name)
+            AES_decrypt(file_name,hash_keyword16(rot47_encode(entry1.get())), file_name)
+            
             update_progress(7)
-            convert_file_16_8()
+            #convert_file_16_8(file_name)
             update_progress(9)
             DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
             update_progress(10)
@@ -109,56 +110,56 @@ def xor_Decrypt(filename, key):
 
 
 #AES encrypt & decrypt #Skyf
-def AES_encrypt(file_path,key1):
-
-    key = b'Sixteen byte key'
+def AES_encrypt(file_path, key):
     cipher = AES.new(key, AES.MODE_EAX)
-    #print(get_file_bytes)
     nonce = cipher.nonce
-    with open('Stuff.txt', 'wb') as fnonce:
-        fnonce.write(nonce)
-    ciphertext, tag = cipher.encrypt_and_digest(get_file_bytes(file_path))
-    with open('encfase1.bin', 'wb') as fout:
-        fout.write(ciphertext)
-    #print(ciphertext)
-
-def AES_decrypt(file_path, key1):
-    with open('Stuff.txt', 'rb') as fnonce:
-        nonce = fnonce.read(16)
-
-    with open('encfase1.bin', 'rb') as fin:
-        ciphertext = fin.read()
+ 
+    with open(file_path, 'rb') as fin:
+        plaintext = fin.read()
     
-    cipher = AES.new(key1, AES.MODE_EAX, nonce)
+    ciphertext, tag = cipher.encrypt_and_digest(plaintext)
     
-    plaintext = cipher.decrypt(ciphertext)
-    with open('DD-'+file_path, 'wb') as fout:
-        fout.write(plaintext)
+    with open('CC-' + file_name, 'wb') as fout:
+        fout.write(nonce + ciphertext + tag)
 
+def AES_decrypt(file_path, key, file_name):
+    with open(file_path, 'rb') as fin:
+        data = fin.read()
+    
+    nonce = data[:16]
+    ciphertext = data[16:-16]
+    tag = data[-16:]
+    
+    cipher = AES.new(key, AES.MODE_EAX, nonce)
+    
+    plaintext = cipher.decrypt_and_verify(ciphertext, tag)
+        
+    with open('DD-DD-' + file_name, 'wb') as fout:
+         fout.write(plaintext)
         
 
 
-def DES_encrypt(key3,file_name):
-    cipher = DES.new(key3, DES.MODE_OFB)
+def DES_encrypt(key, file_name):
+    cipher = DES.new(key, DES.MODE_OFB)
+    iv = cipher.iv
 
-    with open('encfase2.bin', 'rb') as input_file, open('CC-' + file_name, 'wb') as output_file:        
-        output_file.write(cipher.iv + cipher.encrypt(input_file.read()))
-        return 'CC-' + file_name
+    with open(file_name, 'rb') as input_file, open('CC-CC-' + file_name, 'wb') as output_file:
+        output_file.write(iv + cipher.encrypt(input_file.read()))
 
 
+def DES_decrypt(key, file_name):
+    with open(file_name, 'rb') as input_file, open('DD-' + file_name, 'wb') as output_file:
+        iv = input_file.read(8)  # Read the IV (first 8 bytes)
+        cipher = DES.new(key, DES.MODE_OFB, iv)
+        
+        while True:
+            block = input_file.read(8)  # Read the ciphertext block (8 bytes)
+            if not block:
+                break  # Reached end of file
+            
+            decrypted_block = cipher.decrypt(block)
+            output_file.write(decrypted_block)
 
-def DES_decrypt(key3,file_name):
-    cipher = DES.new(key3, DES.MODE_OFB)
-# Open the input and output files
-    with open(file_name, 'rb') as input_file, open('decfase1.bin', 'wb') as output_file:
-    # Read the input file in blocks of 8 bytes
-     while True:
-           block = input_file.read(8)
-           if not block:
-              break  # Reached end of file
-          # Decrypt the block and write it to the output file
-           decrypted_block = cipher.decrypt(block)
-           output_file.write(decrypted_block)
 
 
 def text_to_int(text_input):
@@ -180,8 +181,8 @@ def convert_file_8_16(file_name):
 
 
             # 8 byte to 16 byte help my asseblief
-def convert_file_16_8():
-    with open('encfase1.bin', 'rb') as input_file, open('encfase2.bin', 'wb') as output_file:
+def convert_file_16_8(file_name):
+    with open(file_name, 'rb') as input_file, open('encfase2.bin', 'wb') as output_file:
     # Read the input file in blocks of 16 bytes
       while True:
         block = input_file.read(16)
