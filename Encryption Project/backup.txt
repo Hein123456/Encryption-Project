@@ -4,17 +4,13 @@ from msilib.schema import RadioButton
 import tkinter as tk
 from tkinter import Radiobutton, Variable, messagebox, filedialog, font, ttk
 import os
-import random
 
-#hash
-import hashlib
-#Global
-file_flag = False
+
+
+
 file_path = ''
 file_name = ''
-key = b''
-iv = b''
-size = 2048
+
 
 #main
 def run_code():
@@ -25,7 +21,7 @@ def run_code():
             update_progress(3)
             file_name = os.path.basename(file_path)
             update_progress(6)
-            xoe_Encrypt(file_name,text_to_int(entry1.get()))
+            xor_Encrypt(file_name,convert_to_integer(custom_hash(rot47(entry1.get()))))
             update_progress(10)
             listbox2.insert(tk.END,"File encrypted successfully")
         if var2.get() == "Decrypt":
@@ -34,51 +30,34 @@ def run_code():
             update_progress(3)
             file_name = os.path.basename(file_path)
             update_progress(6)
-            xor_Decrypt(file_name, text_to_int(entry1.get()))
+            xor_Decrypt(file_name,convert_to_integer(custom_hash(rot47(entry1.get()))))
             update_progress(10)
             listbox2.insert(tk.END,"File decrypted successfully")
-
 
     if var1.get() == "Custom":
         if var2.get() == "Encrypt":
             update_progress(1)
-            #print(entry1.get())
-            #print(rot47_encode(entry1.get()))
-            #print(hash_keyword16(rot47_encode(entry1.get())))
             file_path = entry0.get()
-            file_name = os.path.basename(file_path)
             update_progress(3)
-            #print(file_path)
-             
-            encrypt_file(file_name, 'output1.bin',convert_key(entry1.get(),32))
-            update_progress(7)
-            
-            #convert_file_16_8(file_name)
-            update_progress(9)
+            file_name = os.path.basename(file_path)
+            update_progress(6)
+            xor_Encrypt_custom(file_name, convert_to_integer(custom_hash(rot47(entry1.get()))))
             update_progress(10)
-            #Remove_file(file_path)
-            listbox1.insert(tk.END,"File encrypted successfully")
-
+            listbox2.insert(tk.END,"File encrypted successfully")
         if var2.get() == "Decrypt":
             update_progress(1)
             file_path = entry0.get()
             update_progress(3)
             file_name = os.path.basename(file_path)
-            update_progress(5)
-            #convert_file_8_16(file_name)
-            decrypt_file('output1.bin',file_name , convert_key(entry1.get(),32))
-            
-            update_progress(7)
-            #convert_file_16_8(file_name)
-            update_progress(9)
-            DES_decrypt(hash_keyword8(rot47_encode(entry1.get())),file_name)
+            update_progress(6)
+            xor_Decrypt_custom(file_name,convert_to_integer(custom_hash(rot47(entry1.get()))))
             update_progress(10)
             listbox2.insert(tk.END,"File decrypted successfully")
   
 
 
  #xor
-def xoe_Encrypt(filename, key):
+def xor_Encrypt(filename, key):
     file = open(filename, "rb")
     data = file.read()
     file.close()
@@ -108,10 +87,94 @@ def xor_Decrypt(filename, key):
     
 
 
+def xor_Encrypt_custom(filename, key):
+    file = open(filename, "rb")
+    data = file.read()
+    file.close()
+
+    data = bytearray(data)
+    for index, value in enumerate(data):
+        data[index] = value ^ key
+
+    # Flip the order of bytes in the data
+    data.reverse()
+
+    # Calculate custom hash
+    hash_val = custom_hash(data)
+
+    # Convert hash to bytes
+    hash_bytes = int_to_bytes(hash_val)
+
+    # Append hash bytes to the data
+    data += hash_bytes
+
+    file = open("CC-" + filename, "wb")
+    file.write(data)
+    file.close()
 
 
+def xor_Decrypt_custom(filename, key):
+    file = open(filename, "rb")
+    data = file.read()
+    file.close()
+
+    # Extract the appended hash bytes
+    hash_bytes = data[-4:]
+    data = data[:-4]
+
+    # Flip the order of bytes in the data
+    data = bytearray(data)
+    data.reverse()
+
+    for index, value in enumerate(data):
+        data[index] = value ^ key
+
+    # Calculate hash for decrypted data
+    decrypted_hash = custom_hash(data)
+
+    # Compare the decrypted hash with the extracted hash bytes
+    if decrypted_hash == bytes_to_int(hash_bytes):
+        file = open(filename, "wb")
+        file.write(data)
+        file.close()
+        print("Decryption successful.")
+    else:
+        print("Decryption failed. Hash mismatch.")
 
 
+def custom_hash(data):
+    hash_val = 0
+    for byte in data:
+        if isinstance(byte, str) and byte.isdigit():
+            hash_val += int(byte)
+        elif isinstance(byte, int):
+            hash_val += byte
+        else:
+            hash_val += ord(str(byte))
+    return hash_val
+
+def int_to_bytes(value):
+    return value.to_bytes(4, byteorder="big")
+
+
+def bytes_to_int(data):
+    return int.from_bytes(data, byteorder="big")
+def convert_to_integer(hash_val):
+    return hash_val % 255 + 1
+
+
+def rot47(text):
+    result = ""
+    for char in text:
+        ascii_val = ord(char)
+        if 33 <= ascii_val <= 126:
+            result += chr(33 + ((ascii_val + 14) % 94))
+        else:
+            result += char
+    return result
+
+
+#source file delete #Skyf
 def Remove_file(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
@@ -119,9 +182,9 @@ def Remove_file(file_path):
     else:
         listbox1.insert(tk.END,"File could not be removed")
 
+# integration #Skyf en Jaap
 
 
-#gui #Jaap
 def get_file():
     #file_flag = True
     file_path = filedialog.askopenfilename()
@@ -130,8 +193,29 @@ def get_file():
 
     entry0.delete(0, tk.END)
     entry0.insert(0, file_path)
+    
 
- # GUI ========================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# GUI=======================================================================
 
 root = tk.Tk(className='Encryption Project')
 
